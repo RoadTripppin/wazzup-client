@@ -3,17 +3,16 @@
     "eslint:recommended",
     "plugin:import/errors",
     "plugin:react/recommended",
-    "plugin:jsx-a11y/recommended",
+    //"plugin:jsx-a11y/recommended",
     "plugin:react-hooks/recommended",
     "plugin:react-hooks/recommended",
-    "plugin:testing-library/recommended",
     "prettier"
   ],
   "rules": {
     "react/prop-types": 0,
     "react/react-in-jsx-scope": 0
   },
-  "plugins": ["react", "import", "jsx-a11y", "testing-library"], //"jsx-a11y" is for accessibility
+  "plugins": ["react", "import", "testing-library"], // "jsx-a11y" "jsx-a11y" is for accessibility
   "parserOptions": {
     "ecmaVersion": 2021,
     "sourceType": "module",
