@@ -1,4 +1,13 @@
-# Getting Started with Create React App
+# Wazzup client
+This is the client app for WhatsApp Clone.
+The server app is in [wazzup](https://github.com/RoadTripppin/wazzup).
+
+## Tools and packages used
+- React
+- chatscope chat ui toolkit
+- lodash 
+- faker
+- cypress
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
