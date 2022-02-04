@@ -7,6 +7,7 @@ import {
   Box,
   TextField,
   Button,
+  Alert,
 } from "@mui/material";
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -15,6 +16,7 @@ import Resizer from "react-image-file-resizer";
 const Register = () => {
   const [searchParams] = useSearchParams();
   const [email, setEmail] = useState(searchParams.get("email") ?? "");
+  const [alertStatus, setAlertStatus] = useState("");
   const [imgData, setImgData] = useState(null);
 
   const resizeFile = (file) =>
@@ -48,12 +50,25 @@ const Register = () => {
   const handleRegister = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-      confirm_password: data.get("confirm-password"),
-      name: data.get("name"),
-    });
+    const [name, mail, password, confirm_password] = data.values();
+    console.log(name, mail, password, confirm_password);
+    let re =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (re.test(email)) {
+      // this is a valid email address
+      // call setState({email: email}) to update the email
+      // or update the data in redux store.
+      if (password !== confirm_password) {
+        setAlertStatus("Passwords don't match!");
+      } else if (password.length == 0) {
+        setAlertStatus("Invalid Password!");
+      } else {
+        setAlertStatus("");
+      }
+    } else {
+      setAlertStatus("Invalid email address!");
+    }
   };
 
   return (
@@ -87,6 +102,7 @@ const Register = () => {
             fullWidth
             name="name"
             label="Name"
+            type="text"
             id="registerComponentName"
             autoComplete="name"
             autoFocus
@@ -97,6 +113,7 @@ const Register = () => {
             fullWidth
             name="email"
             label="Email Address"
+            type="email"
             id="registerComponentEmail"
             autoComplete="email"
             value={email}
@@ -116,7 +133,7 @@ const Register = () => {
             margin="normal"
             required
             fullWidth
-            name="confirm-password"
+            name="confirm_password"
             label="Confirm Password"
             type="password"
             id="registerComponentPasswordConfirmation"
@@ -142,6 +159,7 @@ const Register = () => {
           >
             <img className="playerProfilePic_home_tile" src={imgData} />
           </Box>
+          {alertStatus ? <Alert severity="error">{alertStatus}</Alert> : null}
           <Button
             type="submit"
             fullWidth
