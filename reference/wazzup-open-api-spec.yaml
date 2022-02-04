@@ -1,0 +1,227 @@
+openapi: 3.1.0
+info:
+  title: wazzup-open-api-spec
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  '/users/{userId}':
+    parameters:
+      - schema:
+          type: integer
+        name: userId
+        in: path
+        required: true
+        description: Id of an existing user.
+    get:
+      summary: Get User Info by User ID
+      tags: []
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                Example User:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    name: Alice
+                    email: alice.smith@gmail.com
+                    create_date: 1633866793
+                    image_url: 'https://some-static-site.com/photos/alice_smith.png'
+        '404':
+          description: User Not Found
+      operationId: get-users-userId
+      description: Retrieve the information of the user with the matching user ID.
+  /user:
+    post:
+      summary: Create New User
+      operationId: post-user
+      responses:
+        '200':
+          description: User Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                New User Bob Fellow:
+                  value:
+                    id: 12
+                    firstName: Bob
+                    lastName: Fellow
+                    email: bob.fellow@gmail.com
+                    dateOfBirth: '1996-08-24'
+                    emailVerified: false
+                    createDate: '2020-11-18'
+        '400':
+          description: Missing Required Information
+        '409':
+          description: Email Already Taken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                image_url:
+                  type: string
+                  format: uri
+              required:
+                - name
+                - email
+            examples:
+              example-1:
+                value:
+                  name: string
+                  email: user@example.com
+                  image_url: 'http://example.com'
+        description: Post the necessary fields for the API to create a new user.
+      description: Create a new user.
+  '/chats/{chat_id}':
+    parameters:
+      - schema:
+          type: string
+        name: chat_id
+        in: path
+        required: true
+    get:
+      summary: Endpoint to GET chat of a specific ID
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+                  users:
+                    type: array
+                    minItems: 2
+                    items:
+                      type: string
+                      format: uuid
+                    readOnly: true
+                  is_group:
+                    type: boolean
+                  chat_name:
+                    type: string
+                required:
+                  - users
+                  - is_group
+      operationId: get-chats-chat_id
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+        description: ''
+      parameters:
+        - schema:
+            type: number
+            format: double
+          in: query
+          name: offset
+          required: true
+        - schema:
+            type: number
+            default: 25
+            format: double
+          in: query
+          name: count
+          required: true
+        - schema:
+            type: string
+            format: uuid
+          in: header
+          name: user_id
+          required: true
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      description: Model of a user
+      examples:
+        - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          name: Alice
+          email: alice.smith@gmail.com
+          create_date: 1633866793
+          image_url: 'https://some-static-site.com/photos/alice_smith.png'
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the given user.
+          format: uuid
+        name:
+          type: string
+          maxLength: 30
+          pattern: '^[A-Za-z ]+'
+          minLength: 2
+        email:
+          type: string
+          format: email
+          example: starlord@avenger.com
+        create_date:
+          type: string
+          format: date-time
+          description: The date that the user was created.
+        image_url:
+          type: string
+          format: uri
+      required:
+        - id
+        - name
+        - email
+    Message:
+      title: Message
+      type: object
+      description: Model of a single message
+      examples:
+        - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          text: 'Hi, how are you doing today?'
+          sender_id: 3194e023-c19f-4a42-9172-9e18d68e3a3a
+          recipient_id: b6731cb5-d462-49ea-afb8-7933b670b560
+          timestamp: '1633866793'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: unique ID of the message
+          minLength: 1
+          readOnly: true
+        text:
+          type: string
+          maxLength: 300
+          example: 'Hi, how are you doing today?'
+          description: Body/text of the message.
+        sender_id:
+          type: string
+          format: uuid
+          description: Unique ID of the sender(UserID)
+        recipient_id:
+          type: string
+          format: uuid
+          description: Unique ID of the recipient(user/group)
+        timestamp:
+          type: string
+          format: date-time
+          example: '1633866793'
+          maxLength: 10
+          pattern: '^[0-9]*'
+          minLength: 10
+          readOnly: true
