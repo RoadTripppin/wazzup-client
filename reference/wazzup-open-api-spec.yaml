@@ -24,71 +24,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
               examples:
-                Get User Alice Smith:
+                Example User:
                   value:
-                    id: 142
-                    firstName: Alice
-                    lastName: Smith
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    name: Alice
                     email: alice.smith@gmail.com
-                    dateOfBirth: '1997-10-31'
-                    emailVerified: true
-                    signUpDate: '2019-08-24'
+                    create_date: 1633866793
+                    image_url: 'https://some-static-site.com/photos/alice_smith.png'
         '404':
           description: User Not Found
       operationId: get-users-userId
       description: Retrieve the information of the user with the matching user ID.
-    patch:
-      summary: Update User Information
-      operationId: patch-users-userId
-      responses:
-        '200':
-          description: User Updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-              examples:
-                Updated User Rebecca Baker:
-                  value:
-                    id: 13
-                    firstName: Rebecca
-                    lastName: Baker
-                    email: rebecca@gmail.com
-                    dateOfBirth: '1985-10-02'
-                    emailVerified: false
-                    createDate: '2019-08-24'
-        '404':
-          description: User Not Found
-        '409':
-          description: Email Already Taken
-      description: Update the information of an existing user.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-                email:
-                  type: string
-                  description: 'If a new email is given, the user''s email verified property will be set to false.'
-                dateOfBirth:
-                  type: string
-            examples:
-              Update First Name:
-                value:
-                  firstName: Rebecca
-              Update Email:
-                value:
-                  email: rebecca@gmail.com
-              Update Last Name & Date of Birth:
-                value:
-                  lastName: Baker
-                  dateOfBirth: '1985-10-02'
-        description: Patch user properties to update.
   /user:
     post:
       summary: Create New User
@@ -120,27 +66,23 @@ paths:
             schema:
               type: object
               properties:
-                firstName:
-                  type: string
-                lastName:
+                name:
                   type: string
                 email:
                   type: string
-                dateOfBirth:
+                  format: email
+                image_url:
                   type: string
-                  format: date
+                  format: uri
               required:
-                - firstName
-                - lastName
+                - name
                 - email
-                - dateOfBirth
             examples:
-              Create User Bob Fellow:
+              example-1:
                 value:
-                  firstName: Bob
-                  lastName: Fellow
-                  email: bob.fellow@gmail.com
-                  dateOfBirth: '1996-08-24'
+                  name: string
+                  email: user@example.com
+                  image_url: 'http://example.com'
         description: Post the necessary fields for the API to create a new user.
       description: Create a new user.
   '/chats/{chat_id}':
@@ -162,7 +104,9 @@ paths:
                 type: object
                 properties:
                   messages:
-                    $ref: '#/components/schemas/Message'
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
                   users:
                     type: array
                     minItems: 2
@@ -227,6 +171,7 @@ components:
           type: string
           maxLength: 30
           pattern: '^[A-Za-z ]+'
+          minLength: 2
         email:
           type: string
           format: email
