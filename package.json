@@ -4,12 +4,14 @@
   "private": true,
   "dependencies": {
     "@chatscope/chat-ui-kit-react": "^1.8.3",
+    "@chatscope/chat-ui-kit-styles": "^1.2.3",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@mui/material": "^5.4.0",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
+    "lodash": "^4.17.21",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-image-file-resizer": "^0.4.7",
@@ -45,6 +47,7 @@
   },
   "devDependencies": {
     "cypress": "^9.4.1",
+    "@faker-js/faker": "^6.0.0-alpha.5",
     "eslint": "^8.8.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-cypress": "^2.12.1",

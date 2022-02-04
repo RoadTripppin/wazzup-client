@@ -13,7 +13,12 @@
     "react/prop-types": 0,
     "react/react-in-jsx-scope": 0
   },
-  "plugins": ["react", "import", "testing-library", "cypress"], // "jsx-a11y" "jsx-a11y" is for accessibility
+  "plugins": [
+    "react",
+    "import",
+    "testing-library",
+    "cypress"
+  ], // "jsx-a11y" "jsx-a11y" is for accessibility
   "parserOptions": {
     "ecmaVersion": 2021,
     "sourceType": "module",

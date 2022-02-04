@@ -209,6 +209,7 @@ components:
           maxLength: 300
           example: 'Hi, how are you doing today?'
           description: Body/text of the message.
+          minLength: 1
         sender_id:
           type: string
           format: uuid
