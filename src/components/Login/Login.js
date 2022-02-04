@@ -9,10 +9,11 @@ import {
   Button,
 } from "@mui/material";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState(" ");
+  const [searchParams] = useSearchParams();
+  const [email, setEmail] = useState(searchParams.get("email") ?? "");
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -51,6 +52,7 @@ const Login = () => {
             label="Email Address"
             id="loginComponentEmail"
             autoComplete="email"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
             autoFocus
           />
