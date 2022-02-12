@@ -1,14 +1,5 @@
 import logo from "../../assets/logo.jpg";
-import {
-  Container,
-  CssBaseline,
-  Typography,
-  Avatar,
-  Box,
-  TextField,
-  Button,
-  Alert,
-} from "@mui/material";
+import { Container, CssBaseline, Typography, Avatar, Box, TextField, Button, Alert } from "@mui/material";
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Resizer from "react-image-file-resizer";
@@ -42,16 +33,18 @@ const Register = () => {
       const file = event.target.files[0];
       const image = await resizeFile(file);
       setImgData(image);
+      console.log(image);
     } catch (err) {
       console.log(err);
     }
   };
 
   const handleRegister = (event) => {
+    //TODO: handle register functionality
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const [name, mail, password, confirm_password] = data.values();
-    console.log(name, mail, password, confirm_password);
+    console.log(name, mail, password, confirm_password, imgData);
     let re =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -82,20 +75,11 @@ const Register = () => {
           alignItems: "center",
         }}
       >
-        <Avatar
-          alt="Wazzup Logo"
-          src={logo}
-          sx={{ m: 2, width: 75, height: 75 }}
-        />
+        <Avatar alt="Wazzup Logo" src={logo} sx={{ m: 2, width: 75, height: 75 }} />
         <Typography component="h1" variant="h5">
           Register
         </Typography>
-        <Box
-          component="form"
-          onSubmit={handleRegister}
-          noValidate
-          sx={{ mt: 1 }}
-        >
+        <Box component="form" onSubmit={handleRegister} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
@@ -144,6 +128,7 @@ const Register = () => {
             <input
               id="registerComponentProfilePicture"
               type="file"
+              accept=".jpg,.jpeg,.png"
               onChange={onChangePicture}
               hidden
             />
@@ -157,20 +142,13 @@ const Register = () => {
               alignItems: "center",
             }}
           >
-            <img className="playerProfilePic_home_tile" src={imgData} />
+            <img className="userProfilePicture" src={imgData} />
           </Box>
           {alertStatus ? <Alert severity="error">{alertStatus}</Alert> : null}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             Register
           </Button>
-          <Link to={`/?email=${email}`}>
-            {"Already have an account? Login"}
-          </Link>
+          <Link to={`/?email=${email}`}>{"Already have an account? Login"}</Link>
         </Box>
       </Box>
     </Container>
