@@ -4,7 +4,8 @@ import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
-import ChatContainer from "./components/ChatContainer/ChatContainer.js";
+import UpdateUser from "./components/UpdateUser/UpdateUser";
+import ChatContainer from "./components/ChatContainer/ChatContainer";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/chat" element={<ChatContainer />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/update" element={<UpdateUser />} />
           <Route path="/" element={<Login />} />
         </Routes>
       </Router>
