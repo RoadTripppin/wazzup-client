@@ -1,14 +1,5 @@
 import logo from "../../assets/logo.jpg";
-import {
-  Container,
-  CssBaseline,
-  Typography,
-  Avatar,
-  Box,
-  TextField,
-  Button,
-  Alert,
-} from "@mui/material";
+import { Container, CssBaseline, Typography, Avatar, Box, TextField, Button, Alert } from "@mui/material";
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
@@ -18,6 +9,7 @@ const Login = () => {
   const [alertStatus, setAlertStatus] = useState("");
 
   const handleLogin = (event) => {
+    //TODO: handle login functionality
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
@@ -49,11 +41,7 @@ const Login = () => {
           alignItems: "center",
         }}
       >
-        <Avatar
-          alt="Wazzup Logo"
-          src={logo}
-          sx={{ m: 2, width: 75, height: 75 }}
-        />
+        <Avatar alt="Wazzup Logo" src={logo} sx={{ m: 2, width: 75, height: 75 }} />
         <Typography component="h1" variant="h5">
           Login
         </Typography>
@@ -82,17 +70,10 @@ const Login = () => {
             autoComplete="current-password"
           />
           {alertStatus ? <Alert severity="error">{alertStatus}</Alert> : null}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             Login
           </Button>
-          <Link to={`/register?email=${email}`}>
-            {"Don't have an account? Sign Up"}
-          </Link>
+          <Link to={`/register?email=${email}`}>{"Don't have an account? Sign Up"}</Link>
         </Box>
       </Box>
     </Container>

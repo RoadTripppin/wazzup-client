@@ -16,10 +16,7 @@ describe("Login Module", () => {
           });
           expect(email).to.equal("fake@email.com");
         });
-      cy.get("[id=loginComponentPassword]")
-        .click()
-        .type("password")
-        .should("have.value", "password");
+      cy.get("[id=loginComponentPassword]").click().type("password").should("have.value", "password");
     });
   });
 
@@ -49,7 +46,7 @@ describe("Login Module", () => {
     });
   });
 
-  it("Check if clicking on signup redirects user with email passed through when no email is entered", () => {
+  it("Check if clicking on signup redirects user with email passed (blank email) through when no email is entered", () => {
     cy.visit("http://localhost:3000");
     cy.get("h1").contains("Login");
     cy.get("form").within(() => {

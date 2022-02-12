@@ -1,14 +1,13 @@
 import logo from "../../assets/logo.jpg";
 import { Container, CssBaseline, Typography, Avatar, Box, TextField, Button, Alert } from "@mui/material";
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Resizer from "react-image-file-resizer";
 
-const Register = () => {
-  const [searchParams] = useSearchParams();
-  const [email, setEmail] = useState(searchParams.get("email") ?? "");
+const UpdateUser = () => {
   const [alertStatus, setAlertStatus] = useState("");
   const [imgData, setImgData] = useState(null);
+  let navigate = useNavigate();
 
   const resizeFile = (file) =>
     new Promise((resolve) => {
@@ -33,34 +32,30 @@ const Register = () => {
       const file = event.target.files[0];
       const image = await resizeFile(file);
       setImgData(image);
-      console.log(image);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleRegister = (event) => {
-    //TODO: handle register functionality
+  const handleUpdate = (event) => {
+    //TODO: Call update profile function
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const [name, mail, password, confirm_password] = data.values();
-    console.log(name, mail, password, confirm_password, imgData);
-    let re =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const [name, password, confirm_password] = data.values();
+    console.log(name, password, confirm_password);
+    let change = false;
 
-    if (re.test(email)) {
-      // this is a valid email address
-      // call setState({email: email}) to update the email
-      // or update the data in redux store.
+    if (password !== "" || name !== "" || imgData !== null) {
+      change = true;
       if (password !== confirm_password) {
         setAlertStatus("Passwords don't match!");
-      } else if (password.length == 0) {
-        setAlertStatus("Invalid Password!");
       } else {
-        setAlertStatus("");
+        navigate("/");
       }
-    } else {
-      setAlertStatus("Invalid email address!");
+    }
+
+    if (change === false) {
+      setAlertStatus("Enter details to be updated!");
     }
   };
 
@@ -77,56 +72,41 @@ const Register = () => {
       >
         <Avatar alt="Wazzup Logo" src={logo} sx={{ m: 2, width: 75, height: 75 }} />
         <Typography component="h1" variant="h5">
-          Register
+          Update Profile
         </Typography>
-        <Box component="form" onSubmit={handleRegister} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleUpdate} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
-            required
             fullWidth
             name="name"
             label="Name"
             type="text"
-            id="registerComponentName"
+            id="updateUserComponentName"
             autoComplete="name"
             autoFocus
           />
           <TextField
             margin="normal"
-            required
-            fullWidth
-            name="email"
-            label="Email Address"
-            type="email"
-            id="registerComponentEmail"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            margin="normal"
-            required
             fullWidth
             name="password"
             label="Password"
             type="password"
-            id="registerComponentPassword"
+            id="updateUserComponentPassword"
             autoComplete="new-password"
           />
           <TextField
             margin="normal"
-            required
             fullWidth
             name="confirm_password"
             label="Confirm Password"
             type="password"
-            id="registerComponentPasswordConfirmation"
+            id="updateUserComponentPasswordConfirmation"
             autoComplete="new-password"
           />
           <Button variant="contained" component="label">
             Upload Profile Picture
             <input
-              id="registerComponentProfilePicture"
+              id="updateUserComponentProfilePicture"
               type="file"
               accept=".jpg,.jpeg,.png"
               onChange={onChangePicture}
@@ -146,13 +126,12 @@ const Register = () => {
           </Box>
           {alertStatus ? <Alert severity="error">{alertStatus}</Alert> : null}
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Register
+            Update
           </Button>
-          <Link to={`/?email=${email}`}>{"Already have an account? Login"}</Link>
         </Box>
       </Box>
     </Container>
   );
 };
 
-export default Register;
+export default UpdateUser;
