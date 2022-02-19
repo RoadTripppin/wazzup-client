@@ -4,6 +4,14 @@
  *
  */
 
-function getChats(chatId, userId, offset, count) {}
-
-function getUserDetails(userIds) {}
+/**
+ * Function for user to login
+ *
+ * @param {string} EmailID
+ * @param {string} Password
+ *
+ */
+export async function LoginAPI(emailId, Password) {
+  console.log(emailId, Password);
+  return false;
+}

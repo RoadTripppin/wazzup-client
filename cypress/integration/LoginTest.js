@@ -1,25 +1,5 @@
 let email;
 describe("Login Module", () => {
-  it("Check if user can enter email and password", () => {
-    cy.visit("http://localhost:3000");
-    cy.get("h1").contains("Login");
-
-    cy.get("form").within(() => {
-      cy.get("[id=loginComponentEmail]")
-        .click()
-        .type("fake@email.com")
-        .invoke("val")
-        .then((text) => {
-          email = text;
-          cy.writeFile("./cypress/fixtures/loginComponent.json", {
-            email: email,
-          });
-          expect(email).to.equal("fake@email.com");
-        });
-      cy.get("[id=loginComponentPassword]").click().type("password").should("have.value", "password");
-    });
-  });
-
   it("Check if clicking on signup redirects user", () => {
     cy.visit("http://localhost:3000");
     cy.get("h1").contains("Login");

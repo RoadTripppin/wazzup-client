@@ -1,30 +1,34 @@
-import logo from "../../assets/logo.jpg";
-import { Container, CssBaseline, Typography, Avatar, Box, TextField, Button, Alert } from "@mui/material";
+import { Alert, Avatar, Box, Button, Container, CssBaseline, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { LoginAPI } from "../../api/WazzupServerLib";
+import logo from "../../assets/logo.jpg";
 
 const Login = () => {
   const [searchParams] = useSearchParams();
   const [email, setEmail] = useState(searchParams.get("email") ?? "");
   const [alertStatus, setAlertStatus] = useState("");
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     //TODO: handle login functionality
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-
+    const password = data.get("password");
     let re =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (re.test(email)) {
       // this is a valid email address
-      // call setState({email: email}) to update the email
-      // or update the data in redux store.
       setAlertStatus("");
+      if (password !== "") {
+        const res = await LoginAPI(data.get("email"), data.get("password"));
+        if (res) {
+          //Successful Login
+          console.log("Success!");
+        } else {
+          setAlertStatus("Invalid Credentials");
+        }
+      }
     } else {
       setAlertStatus("Invalid email address!");
     }
