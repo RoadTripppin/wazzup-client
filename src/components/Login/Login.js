@@ -14,14 +14,15 @@ const Login = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const password = data.get("password");
+    const mail = data.get("email");
     let re =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (re.test(email)) {
+    if (re.test(mail)) {
       // this is a valid email address
       setAlertStatus("");
       if (password !== "") {
-        const res = await LoginAPI(data.get("email"), data.get("password"));
+        const res = await LoginAPI(mail, password);
         if (res) {
           //Successful Login
           console.log("Success!");

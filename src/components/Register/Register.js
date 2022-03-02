@@ -3,6 +3,7 @@ import { Container, CssBaseline, Typography, Avatar, Box, TextField, Button, Ale
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Resizer from "react-image-file-resizer";
+import { RegisterAPI } from "../../api/WazzupServerLib";
 
 const Register = () => {
   const [searchParams] = useSearchParams();
@@ -39,7 +40,7 @@ const Register = () => {
     }
   };
 
-  const handleRegister = (event) => {
+  const handleRegister = async (event) => {
     //TODO: handle register functionality
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -48,19 +49,27 @@ const Register = () => {
     let re =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (re.test(email)) {
+    if (name === "") {
+      setAlertStatus("Invalid Name!");
+    } else if (re.test(email)) {
       // this is a valid email address
       // call setState({email: email}) to update the email
       // or update the data in redux store.
       if (password !== confirm_password) {
-        setAlertStatus("Passwords don't match!");
+        setAlertStatus("Invalid, Passwords Don't Match!");
       } else if (password.length == 0) {
         setAlertStatus("Invalid Password!");
       } else {
-        setAlertStatus("");
+        const res = await RegisterAPI(mail, password, name, imgData);
+        if (res) {
+          //Successful Registration
+          console.log("Success!");
+        } else {
+          setAlertStatus("Register Failed!");
+        }
       }
     } else {
-      setAlertStatus("Invalid email address!");
+      setAlertStatus("Invalid Email Address!");
     }
   };
 
@@ -128,6 +137,7 @@ const Register = () => {
             <input
               id="registerComponentProfilePicture"
               type="file"
+              label="Profile Picture"
               accept=".jpg,.jpeg,.png"
               onChange={onChangePicture}
               hidden
