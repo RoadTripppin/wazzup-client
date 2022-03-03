@@ -4,6 +4,12 @@
  *
  */
 
+// eslint-disable-next-line
+function getChats(chatId, userId, offset, count) {}
+
+// eslint-disable-next-line
+function getUserDetails(userIds) {}
+
 /**
  * Function for user to login
  *
