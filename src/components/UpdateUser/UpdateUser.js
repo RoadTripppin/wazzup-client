@@ -45,7 +45,7 @@ const UpdateUser = () => {
     console.log(name, password, confirm_password);
     let change = false;
 
-    if (password !== "" || name !== "" || imgData !== null) {
+    if (password !== "" || confirm_password !== "" || name !== "" || imgData !== null) {
       change = true;
       if (password !== confirm_password) {
         setAlertStatus("Passwords don't match!");

@@ -1,14 +1,16 @@
 import logo from "../../assets/logo.jpg";
 import { Container, CssBaseline, Typography, Avatar, Box, TextField, Button, Alert } from "@mui/material";
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import Resizer from "react-image-file-resizer";
+import { RegisterAPI } from "../../api/WazzupServerLib";
 
 const Register = () => {
   const [searchParams] = useSearchParams();
   const [email, setEmail] = useState(searchParams.get("email") ?? "");
   const [alertStatus, setAlertStatus] = useState("");
   const [imgData, setImgData] = useState(null);
+  let navigate = useNavigate();
 
   const resizeFile = (file) =>
     new Promise((resolve) => {
@@ -39,7 +41,7 @@ const Register = () => {
     }
   };
 
-  const handleRegister = (event) => {
+  const handleRegister = async (event) => {
     //TODO: handle register functionality
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -48,19 +50,34 @@ const Register = () => {
     let re =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (re.test(email)) {
+    if (name === "") {
+      setAlertStatus("Invalid Name!");
+    } else if (re.test(email)) {
       // this is a valid email address
       // call setState({email: email}) to update the email
       // or update the data in redux store.
       if (password !== confirm_password) {
-        setAlertStatus("Passwords don't match!");
+        setAlertStatus("Invalid, Passwords Don't Match!");
       } else if (password.length == 0) {
         setAlertStatus("Invalid Password!");
       } else {
-        setAlertStatus("");
+        try {
+          const res = await RegisterAPI(mail, password, name, imgData);
+          if (res == 200) {
+            //Successful Registration
+            console.log("Success!");
+            navigate("/");
+          } else if (res == 201) {
+            setAlertStatus("Register Failed, User Already Exists");
+          } else {
+            setAlertStatus("Register Failed, Server Error");
+          }
+        } catch (e) {
+          setAlertStatus("Register Failed, Server Error");
+        }
       }
     } else {
-      setAlertStatus("Invalid email address!");
+      setAlertStatus("Invalid Email Address!");
     }
   };
 
@@ -128,6 +145,7 @@ const Register = () => {
             <input
               id="registerComponentProfilePicture"
               type="file"
+              label="Profile Picture"
               accept=".jpg,.jpeg,.png"
               onChange={onChangePicture}
               hidden

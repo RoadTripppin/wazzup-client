@@ -1,30 +1,43 @@
-import logo from "../../assets/logo.jpg";
-import { Container, CssBaseline, Typography, Avatar, Box, TextField, Button, Alert } from "@mui/material";
+import { Alert, Avatar, Box, Button, Container, CssBaseline, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { LoginAPI } from "../../api/WazzupServerLib";
+import logo from "../../assets/logo.jpg";
 
 const Login = () => {
   const [searchParams] = useSearchParams();
   const [email, setEmail] = useState(searchParams.get("email") ?? "");
   const [alertStatus, setAlertStatus] = useState("");
+  let navigate = useNavigate();
 
-  const handleLogin = (event) => {
-    //TODO: handle login functionality
+  const handleLogin = async (event) => {
+    //TODO: Test login functionality
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-
+    const password = data.get("password");
+    const mail = data.get("email");
     let re =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (re.test(email)) {
+    if (re.test(mail)) {
       // this is a valid email address
-      // call setState({email: email}) to update the email
-      // or update the data in redux store.
       setAlertStatus("");
+      if (password !== "") {
+        try {
+          const res = await LoginAPI(mail, password);
+          if (res == 200) {
+            //Successful Login
+            console.log("Success!");
+            navigate("/chat");
+          } else if (res == 401) {
+            setAlertStatus("Login Failed, Invalid Credentials");
+          } else {
+            setAlertStatus("Login Failed, Server Error");
+          }
+        } catch (e) {
+          setAlertStatus("Login Failed, Server Error");
+        }
+      }
     } else {
       setAlertStatus("Invalid email address!");
     }
