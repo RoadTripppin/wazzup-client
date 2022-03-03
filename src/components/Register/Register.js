@@ -1,7 +1,7 @@
 import logo from "../../assets/logo.jpg";
 import { Container, CssBaseline, Typography, Avatar, Box, TextField, Button, Alert } from "@mui/material";
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import Resizer from "react-image-file-resizer";
 import { RegisterAPI } from "../../api/WazzupServerLib";
 
@@ -10,6 +10,7 @@ const Register = () => {
   const [email, setEmail] = useState(searchParams.get("email") ?? "");
   const [alertStatus, setAlertStatus] = useState("");
   const [imgData, setImgData] = useState(null);
+  let navigate = useNavigate();
 
   const resizeFile = (file) =>
     new Promise((resolve) => {
@@ -60,12 +61,19 @@ const Register = () => {
       } else if (password.length == 0) {
         setAlertStatus("Invalid Password!");
       } else {
-        const res = await RegisterAPI(mail, password, name, imgData);
-        if (res) {
-          //Successful Registration
-          console.log("Success!");
-        } else {
-          setAlertStatus("Register Failed!");
+        try {
+          const res = await RegisterAPI(mail, password, name, imgData);
+          if (res == 200) {
+            //Successful Registration
+            console.log("Success!");
+            navigate("/");
+          } else if (res == 201) {
+            setAlertStatus("Register Failed, User Already Exists");
+          } else {
+            setAlertStatus("Register Failed, Server Error");
+          }
+        } catch (e) {
+          setAlertStatus("Register Failed, Server Error");
         }
       }
     } else {
