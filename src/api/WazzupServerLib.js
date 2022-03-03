@@ -11,16 +11,29 @@
  * @param { string } Password
  *
  */
+//TODO: Test fetchWithTimeout functionality with backend
+async function fetchWithTimeout(resource, options = {}) {
+  const { timeout = 8000 } = options;
+
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  const response = await fetch(resource, {
+    ...options,
+    signal: controller.signal,
+  });
+  clearTimeout(id);
+  return response;
+}
+
 export async function LoginAPI(emailId, password) {
-  //TODO: Change return to true or false based on resposne status/message
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: emailId, password: password }),
   };
-  const response = await fetch("http://10.20.63.42:8888/login", requestOptions);
+  const response = await fetchWithTimeout("http://10.20.63.42:8888/login", requestOptions);
   const data = await response.json();
-  console.log(data);
+  console.log(data); //TODO: Remove log
   return response.status;
 }
 
@@ -28,23 +41,19 @@ export async function LoginAPI(emailId, password) {
  * Function for user to login
  *
  * @param { string } EmailID
- *
  * @param { string } Password
- *
  * @param { string } Name
- *
- * @param { base64 } image
+ * @param { base64 } Image
  *
  */
 export async function RegisterAPI(emailId, password, name, image) {
-  //TODO: Change return to true or false based on resposne status/message
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: emailId, password: password, name: name, photo: image }),
   };
-  const response = await fetch("http://10.20.63.42:8888/register", requestOptions);
+  const response = await fetchWithTimeout("http://10.20.63.42:8888/register", requestOptions);
   const data = await response.json();
-  console.log(data);
+  console.log(data); //TODO: Remove log
   return response.status;
 }
