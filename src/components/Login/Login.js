@@ -1,6 +1,6 @@
 import { Alert, Avatar, Box, Button, Container, CssBaseline, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { LoginAPI } from "../../api/WazzupServerLib";
 import logo from "../../assets/logo.jpg";
 
@@ -8,9 +8,10 @@ const Login = () => {
   const [searchParams] = useSearchParams();
   const [email, setEmail] = useState(searchParams.get("email") ?? "");
   const [alertStatus, setAlertStatus] = useState("");
+  let navigate = useNavigate();
 
   const handleLogin = async (event) => {
-    //TODO: handle login functionality
+    //TODO: Test login functionality
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const password = data.get("password");
@@ -22,12 +23,19 @@ const Login = () => {
       // this is a valid email address
       setAlertStatus("");
       if (password !== "") {
-        const res = await LoginAPI(mail, password);
-        if (res) {
-          //Successful Login
-          console.log("Success!");
-        } else {
-          setAlertStatus("Invalid Credentials");
+        try {
+          const res = await LoginAPI(mail, password);
+          if (res == 200) {
+            //Successful Login
+            console.log("Success!");
+            navigate("/chat");
+          } else if (res == 401) {
+            setAlertStatus("Login Failed, Invalid Credentials");
+          } else {
+            setAlertStatus("Login Failed, Server Error");
+          }
+        } catch (e) {
+          setAlertStatus("Login Failed, Server Error");
         }
       }
     } else {

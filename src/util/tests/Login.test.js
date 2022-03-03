@@ -1,7 +1,9 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter as Router } from "react-router-dom";
 import Login from "../../components/Login/Login";
+//import { jest } from "@jest/globals";
+
 beforeEach(() => {
   render(
     <Router>
@@ -36,7 +38,7 @@ test("User can enter email and password", () => {
   expect(passwordElement).toHaveValue("password");
 });
 
-test("Alert is rendered for incorrect email", () => {
+test("Alert is rendered for incorrect email format", () => {
   const emailElement = screen.getByLabelText(/Email Address/);
 
   userEvent.type(emailElement, "fakemail{enter}");
@@ -55,23 +57,7 @@ test("Alert is rendered for incorrect email", () => {
   alertElement = screen.getByText(/Invalid email/i);
   expect(alertElement).toBeInTheDocument();
 
-  userEvent.type(emailElement, "f{selectall}{backspace}fakemail@gmail.com{enter}");
+  userEvent.type(emailElement, "{selectall}{backspace}fakemail@gmail.com{enter}");
   alertElement = screen.queryByText(/Invalid email/i);
   expect(alertElement).not.toBeInTheDocument();
-});
-
-it("Alert is rendered for incorrect credentials", async () => {
-  const emailElement = screen.getByLabelText(/Email Address/);
-  userEvent.type(emailElement, "fakemail@gmail.com");
-  const passwordElement = screen.getByLabelText(/Password/);
-  userEvent.type(passwordElement, "THISISDEFNOTAPASSWORD!");
-
-  const loginButton = screen.getByRole("button", { name: /login/i });
-
-  userEvent.click(loginButton);
-
-  await waitFor(() => {
-    const alertElement = screen.getByText(/Invalid Credentials/i);
-    expect(alertElement).toBeInTheDocument();
-  });
 });
