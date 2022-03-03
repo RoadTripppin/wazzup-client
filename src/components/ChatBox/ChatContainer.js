@@ -68,7 +68,13 @@ class ChatContainer extends React.Component {
     return React.createElement(ck.MessageInput, {
       key: `${_.get(this.state, "user_id")}_${_.get(this.state, "chat_id")}_MessageInput`,
       placeholder: "",
-      onSend: (msg) => console.log(`sending message: ${msg}`),
+      onSend: (msg) => {
+        let newMessageList = _.get(this.state, "messages", []);
+        let messageData = { sender_id: _.get(this.state, "user_id"), text: msg, timestamp: Date.now() };
+        newMessageList.push(messageData);
+        this.setState({ messages: newMessageList });
+        console.log(`sending message: ${msg}`);
+      },
     });
   }
 }
