@@ -11,9 +11,10 @@ class ChatContainer extends React.Component {
   };
 
   render = () => {
-    let convHeader = this.generateChatHeader();
+    const convHeader = this.generateChatHeader();
     let messageList = this.generateMessageList();
-    let chatContainer = React.createElement(ck.ChatContainer, {}, [convHeader, messageList]);
+    const messageInput = this.getMessageInputBox();
+    const chatContainer = React.createElement(ck.ChatContainer, {}, [convHeader, messageList, messageInput]);
     return chatContainer;
   };
   componentDidMount() {
@@ -53,7 +54,7 @@ class ChatContainer extends React.Component {
   };
 
   generateChatHeader() {
-    React.createElement(ck.ConversationHeader, { key: _.get(this.state, "chat_id") }, [
+    return React.createElement(ck.ConversationHeader, { key: _.get(this.state, "chat_id") }, [
       React.createElement(ck.ConversationHeader.Back, { key: "back" }),
       React.createElement(ck.ConversationHeader.Content, {
         key: _.get(this.state, "chat_id") + "_HeaderContent",
@@ -61,6 +62,14 @@ class ChatContainer extends React.Component {
         info: "",
       }),
     ]);
+  }
+
+  getMessageInputBox() {
+    return React.createElement(ck.MessageInput, {
+      key: `${_.get(this.state, "user_id")}_${_.get(this.state, "chat_id")}_MessageInput`,
+      placeholder: "",
+      onSend: (msg) => console.log(`sending message: ${msg}`),
+    });
   }
 }
 
