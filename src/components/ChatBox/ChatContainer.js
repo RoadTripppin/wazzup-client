@@ -74,6 +74,7 @@ class ChatContainer extends React.Component {
         newMessageList.push(messageData);
         this.setState({ messages: newMessageList });
         console.log(`sending message: ${msg}`);
+        api.sendMessage();
       },
     });
   }
