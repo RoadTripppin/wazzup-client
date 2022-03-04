@@ -1,14 +1,23 @@
 "use strict";
 /**
- * This file coinatins fuctions to make REST calls to wazzup-server.
+ * This file contains functions to make REST calls to wazzup-server.
  *
  */
 
 // eslint-disable-next-line
-function getChats(chatId, userId, offset, count) {}
+function getChats(chatId, userId, offset, count) {
+  //API Yet to be implemented in server.
+}
 
 // eslint-disable-next-line
-function getUserDetails(userIds) {}
+function getUserDetails(userIds) {
+  //API Yet to be implemented in server.
+}
+
+// eslint-disable-next-line
+function sendMessage(args) {
+  //Websocket API Yet to be implemented in server.
+}
 
 /**
  * Function for user to login

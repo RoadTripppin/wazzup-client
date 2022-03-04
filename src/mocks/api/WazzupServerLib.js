@@ -36,3 +36,7 @@ export function getUserDetails(userIds) {
   }
   return users;
 }
+
+export function sendMessage() {
+  //Websocket API Yet to be implemented in server.
+}
