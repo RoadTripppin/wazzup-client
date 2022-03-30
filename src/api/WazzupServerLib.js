@@ -48,8 +48,8 @@ export async function LoginAPI(emailId, password) {
   };
   const response = await fetchWithTimeout("http://10.20.63.42:8888/login", requestOptions);
   const data = await response.json();
-  console.log(data); //TODO: Remove log
-  return response.status;
+
+  return { data: data, status: response.status };
 }
 
 /**
@@ -70,5 +70,6 @@ export async function RegisterAPI(emailId, password, name, image) {
   const response = await fetchWithTimeout("http://10.20.63.42:8888/register", requestOptions);
   const data = await response.json();
   console.log(data); //TODO: Remove log
-  return response.status;
+
+  return { data: data, status: response.status };
 }

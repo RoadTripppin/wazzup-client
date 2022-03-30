@@ -63,14 +63,19 @@ const Register = () => {
       } else {
         try {
           const res = await RegisterAPI(mail, password, name, imgData);
-          if (res == 200) {
+          const status = res.status;
+          const ret_data = res.data;
+
+          if (status == 201) {
+            localStorage.setItem("jwt_token", ret_data.token);
+            localStorage.setItem("name", ret_data.user.name);
+            localStorage.setItem("profilepic", ret_data.user.profilepic);
+            localStorage.setItem("email", ret_data.user.email);
             //Successful Registration
             console.log("Success!");
-            navigate("/");
-          } else if (res == 201) {
-            setAlertStatus("Register Failed, User Already Exists");
+            navigate("/chat");
           } else {
-            setAlertStatus("Register Failed, Server Error");
+            setAlertStatus("Register Failed");
           }
         } catch (e) {
           setAlertStatus("Register Failed, Server Error");
