@@ -11,7 +11,6 @@ const Login = () => {
   let navigate = useNavigate();
 
   const handleLogin = async (event) => {
-    //TODO: Test login functionality
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const password = data.get("password");

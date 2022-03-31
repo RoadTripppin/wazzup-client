@@ -42,7 +42,6 @@ const Register = () => {
   };
 
   const handleRegister = async (event) => {
-    //TODO: handle register functionality
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const [name, mail, password, confirm_password] = data.values();
