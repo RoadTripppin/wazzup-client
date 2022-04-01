@@ -52,4 +52,17 @@ export function getUsersDetails(userId) {
     };
     users.push(user);
   }
+  return users;
 }
+
+export function searchUser(query) {
+  let user = {
+    id: faker.datatype.uuid(),
+    name: faker.name.firstName(),
+    email: faker.internet,
+    image_url: faker.image.avatar(),
+  };
+  return user;
+}
+
+export function initChat(userId) {}
