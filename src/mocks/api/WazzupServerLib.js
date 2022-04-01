@@ -40,3 +40,16 @@ export function getUserDetails(userIds) {
 export function sendMessage() {
   //Websocket API Yet to be implemented in server.
 }
+
+export function getUsersDetails(userId) {
+  let users = [];
+  for (let i = 0; i < 7; i++) {
+    let user = {
+      id: faker.datatype.uuid(),
+      name: faker.name.firstName(),
+      email: faker.internet,
+      image_url: faker.image.avatar(),
+    };
+    users.push(user);
+  }
+}
