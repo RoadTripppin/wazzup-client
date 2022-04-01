@@ -49,17 +49,21 @@ const UpdateUser = () => {
       if (password !== confirm_password) {
         setAlertStatus("Passwords don't match!");
       } else {
-        const res = await UpdateAPI(name, password, imgData);
-        const status = res.status;
-        const ret_data = res.data;
-        if (status == 200) {
-          localStorage.setItem("jwt_token", ret_data.token);
-          localStorage.setItem("name", ret_data.user.name);
-          localStorage.setItem("profilepic", ret_data.user.profilepic);
-          localStorage.setItem("email", ret_data.user.email);
-          navigate("/chat");
-        } else {
-          setAlertStatus("Error!");
+        try {
+          const res = await UpdateAPI(name, password, imgData);
+          const status = res.status;
+          const ret_data = res.data;
+          if (status == 200) {
+            localStorage.setItem("jwt_token", ret_data.token);
+            localStorage.setItem("name", ret_data.user.name);
+            localStorage.setItem("profilepic", ret_data.user.profilepic);
+            localStorage.setItem("email", ret_data.user.email);
+            navigate("/chat");
+          } else {
+            setAlertStatus("Error!");
+          }
+        } catch (e) {
+          setAlertStatus("Login Failed, Server Error");
         }
       }
     }

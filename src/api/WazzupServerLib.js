@@ -33,6 +33,9 @@ async function fetchWithTimeout(resource, options = {}) {
   return response;
 }
 
+// eslint-disable-next-line
+export async function getUsersDetails(userEmail) {}
+
 /**
  * Function for user to login
  *
