@@ -1,7 +1,7 @@
 import { CssBaseline, Drawer, Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getUserDetails } from "../../mocks/api/WazzupServerLib";
-import ChatContainer from "../ChatContainer/ChatContainer";
+import ChatContainer from "../ChatBox/ChatContainer";
 import SideBar from "../SideBar/SideBar";
 
 const drawerWidth = 240;
