@@ -41,7 +41,7 @@ export function sendMessage() {
   //Websocket API Yet to be implemented in server.
 }
 
-export function getUsersDetails(userId) {
+export function getUsersDetails() {
   let users = [];
   for (let i = 0; i < 7; i++) {
     let user = {
@@ -55,7 +55,7 @@ export function getUsersDetails(userId) {
   return users;
 }
 
-export function searchUser(query) {
+export function searchUser() {
   let user = {
     id: faker.datatype.uuid(),
     name: faker.name.firstName(),
@@ -65,4 +65,4 @@ export function searchUser(query) {
   return user;
 }
 
-export function initChat(userId) {}
+export function initChat() {}
