@@ -10,16 +10,10 @@ function getChats(chatId, userId, offset, count) {
 }
 
 // eslint-disable-next-line
-function getUsersDetails(userIds) {
-  //API Yet to be implemented in server.
-}
-
-// eslint-disable-next-line
 function sendMessage(args) {
   //Websocket API Yet to be implemented in server.
 }
 
-//TODO: Test fetchWithTimeout functionality with backend
 async function fetchWithTimeout(resource, options = {}) {
   const { timeout = 8000 } = options;
 
@@ -34,7 +28,17 @@ async function fetchWithTimeout(resource, options = {}) {
 }
 
 // eslint-disable-next-line
-export async function getUsersDetails(userEmail) {}
+export async function getUsersDetails(userEmail) {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + localStorage.getItem("jwt_token") },
+    body: JSON.stringify({ email: userEmail }),
+  };
+  const response = await fetchWithTimeout("http://10.20.63.4:8882/user/UsersDetails", requestOptions); //Change when backend code is ready
+  const data = await response.json();
+
+  return { data: data, status: response.status };
+}
 
 /**
  * Function for user to login
