@@ -11,7 +11,6 @@ const Login = () => {
   let navigate = useNavigate();
 
   const handleLogin = async (event) => {
-    //TODO: Test login functionality
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const password = data.get("password");
@@ -25,11 +24,18 @@ const Login = () => {
       if (password !== "") {
         try {
           const res = await LoginAPI(mail, password);
-          if (res == 200) {
+          const status = res.status;
+          const ret_data = res.data;
+
+          if (status == 200) {
+            localStorage.setItem("jwt_token", ret_data.token);
+            localStorage.setItem("name", ret_data.user.name);
+            localStorage.setItem("profilepic", ret_data.user.profilepic);
+            localStorage.setItem("email", ret_data.user.email);
             //Successful Login
             console.log("Success!");
             navigate("/chat");
-          } else if (res == 401) {
+          } else if (status == 401) {
             setAlertStatus("Login Failed, Invalid Credentials");
           } else {
             setAlertStatus("Login Failed, Server Error");

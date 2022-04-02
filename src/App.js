@@ -6,7 +6,7 @@ import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import UpdateUser from "./components/UpdateUser/UpdateUser";
 import ErrorPage from "./components/ErrorPage/ErrorPage";
-import ChatContainer from "./components/ChatBox/ChatContainer.js";
+import MainApp from "./components/MainApp/MainApp";
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
         <Routes>
           <Route path="*" element={<ErrorPage />} />
           <Route path="/" element={<Login />} />
-          <Route path="/chat" element={<ChatContainer />} />
+          <Route path="/chat" element={<MainApp />} />
           <Route path="/register" element={<Register />} />
           <Route path="/update" element={<UpdateUser />} />
         </Routes>

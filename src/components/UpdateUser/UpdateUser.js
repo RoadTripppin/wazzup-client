@@ -3,6 +3,7 @@ import { Container, CssBaseline, Typography, Avatar, Box, TextField, Button, Ale
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Resizer from "react-image-file-resizer";
+import { UpdateAPI } from "../../api/WazzupServerLib";
 
 const UpdateUser = () => {
   const [alertStatus, setAlertStatus] = useState("");
@@ -37,12 +38,10 @@ const UpdateUser = () => {
     }
   };
 
-  const handleUpdate = (event) => {
-    //TODO: Call update profile function
+  const handleUpdate = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const [name, password, confirm_password] = data.values();
-    console.log(name, password, confirm_password);
     let change = false;
 
     if (password !== "" || confirm_password !== "" || name !== "" || imgData !== null) {
@@ -50,7 +49,22 @@ const UpdateUser = () => {
       if (password !== confirm_password) {
         setAlertStatus("Passwords don't match!");
       } else {
-        navigate("/");
+        try {
+          const res = await UpdateAPI(name, password, imgData);
+          const status = res.status;
+          const ret_data = res.data;
+          if (status == 200) {
+            localStorage.setItem("jwt_token", ret_data.token);
+            localStorage.setItem("name", ret_data.user.name);
+            localStorage.setItem("profilepic", ret_data.user.profilepic);
+            localStorage.setItem("email", ret_data.user.email);
+            navigate("/chat");
+          } else {
+            setAlertStatus("Error!");
+          }
+        } catch (e) {
+          setAlertStatus("Login Failed, Server Error");
+        }
       }
     }
 
