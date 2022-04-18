@@ -10,7 +10,7 @@ const drawerWidth = 240;
 
 const MainApp = () => {
   const [users, setUsers] = useState([]);
-  const [chatId, setChatId] = useState(-1);
+  const [chatId, setChatId] = useState(null);
   const [currentName, setCurrentName] = useState("");
   const [currentPhoto, setCurrentPhoto] = useState("");
   let navigate = useNavigate();
@@ -23,7 +23,8 @@ const MainApp = () => {
       const ret_data = res.data;
 
       if (status == 200) {
-        setUsers(ret_data);
+        console.log(ret_data);
+        setUsers([...ret_data, ...users]);
       } else if (status != 400) {
         alert("Server Error!! Server may be down!");
       }
@@ -62,9 +63,9 @@ const MainApp = () => {
         </Button>
 
         <UserSearch setUsers={setUsers} users={users} />
-
         <SideBar
           conversations={users}
+          activeId={chatId}
           setChat={setChatId}
           setCurrentName={setCurrentName}
           setCurrentPhoto={setCurrentPhoto}

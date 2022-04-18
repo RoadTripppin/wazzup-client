@@ -1,15 +1,12 @@
 import { ConversationList, Conversation, Avatar } from "@chatscope/chat-ui-kit-react";
 import { CssBaseline, Box } from "@mui/material";
 
-//TODO: Remove if backend adds DP
-import faker from "@faker-js/faker";
-
 const SideBar = (props) => {
   const setDetails = (id, name, image) => {
     props.setChat(id);
     props.setCurrentName(name);
     props.setCurrentPhoto(image);
-    console.log(image);
+    console.log(id, name);
   };
 
   return (
@@ -23,12 +20,16 @@ const SideBar = (props) => {
       >
         <ConversationList>
           {props.conversations
-            ? props.conversations.map((c) => {
-                //TODO: Remove if backend adds DP
-                let temp_img = faker.image.avatar();
+            ? props.conversations.map((c, i) => {
+                console.log("sidebar", c);
                 return (
-                  <Conversation key={c.id} name={c.name} onClick={() => setDetails(c.id, c.name, temp_img)}>
-                    <Avatar src={temp_img} />
+                  <Conversation
+                    key={c.id + i}
+                    name={c.name}
+                    onClick={() => setDetails(c.id, c.name, c.profilepic)}
+                    active={props.activeId === c.id}
+                  >
+                    <Avatar src={c.profilepic} />
                   </Conversation>
                 );
               })

@@ -32,6 +32,7 @@ const Login = () => {
             localStorage.setItem("name", ret_data.user.name);
             localStorage.setItem("profilepic", ret_data.user.profilepic);
             localStorage.setItem("email", ret_data.user.email);
+            localStorage.setItem("id", ret_data.user.id);
             //Successful Login
             console.log("Success!");
             navigate("/chat");

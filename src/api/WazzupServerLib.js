@@ -4,6 +4,8 @@
  *
  */
 
+const url = "10.20.63.15";
+
 // eslint-disable-next-line
 function getChats(chatId, userId, offset, count) {
   //API Yet to be implemented in server.
@@ -33,10 +35,10 @@ export async function getUsersDetails() {
     method: "GET",
     headers: { "Content-Type": "application/json", Authorization: "Bearer " + localStorage.getItem("jwt_token") },
   };
-  const response = await fetchWithTimeout("http://10.20.63.4:8882/user/interacted", requestOptions); //Change when backend code is ready
-  const data = await response.json().rooms;
+  const response = await fetchWithTimeout("http://" + url + ":8882/user/interacted", requestOptions); //Change when backend code is ready
+  const data = await response.json();
 
-  return { data: data, status: response.status };
+  return { data: data.rooms, status: response.status };
 }
 
 /**
@@ -52,7 +54,7 @@ export async function LoginAPI(emailId, password) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: emailId, password: password }),
   };
-  const response = await fetchWithTimeout("http://10.20.63.4:8882/login", requestOptions);
+  const response = await fetchWithTimeout("http://" + url + ":8882/login", requestOptions);
   const data = await response.json();
 
   return { data: data, status: response.status };
@@ -73,7 +75,7 @@ export async function RegisterAPI(emailId, password, name, image) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: emailId, password: password, name: name, profilepic: image }),
   };
-  const response = await fetchWithTimeout("http://10.20.63.4:8882/register", requestOptions);
+  const response = await fetchWithTimeout("http://" + url + ":8882/register", requestOptions);
   const data = await response.json();
 
   return { data: data, status: response.status };
@@ -93,7 +95,7 @@ export async function UpdateAPI(name, password, image) {
     headers: { "Content-Type": "application/json", Authorization: "Bearer " + localStorage.getItem("jwt_token") },
     body: JSON.stringify({ name: name, password: password, profilepic: image }),
   };
-  const response = await fetchWithTimeout("http://10.20.63.4:8882/user/update", requestOptions);
+  const response = await fetchWithTimeout("http://" + url + ":8882/user/update", requestOptions);
   const data = await response.json();
 
   return { data: data, status: response.status };
