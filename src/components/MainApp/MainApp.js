@@ -1,8 +1,10 @@
-import { CssBaseline, Drawer, Box } from "@mui/material";
+import { CssBaseline, Drawer, Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getUserDetails } from "../../mocks/api/WazzupServerLib";
 import ChatContainer from "../ChatBox/ChatContainer";
 import SideBar from "../SideBar/SideBar";
+import { useNavigate } from "react-router-dom";
+import UserSearch from "../UserSearch/UserSearch";
 
 const drawerWidth = 240;
 
@@ -11,6 +13,7 @@ const MainApp = () => {
   const [chatId, setChatId] = useState(-1);
   const [currentName, setCurrentName] = useState("");
   const [currentPhoto, setCurrentPhoto] = useState("");
+  let navigate = useNavigate();
 
   const getUsers = async () => {
     try {
@@ -33,6 +36,10 @@ const MainApp = () => {
     /* [] => when to re-run*/
   }, []);
 
+  const handleOnClick = () => {
+    navigate("/update");
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -48,6 +55,12 @@ const MainApp = () => {
         variant="permanent"
         anchor="left"
       >
+        <Button onClick={handleOnClick} fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+          Update Profile
+        </Button>
+
+        <UserSearch setUsers={setUsers} users={users} />
+
         <SideBar
           conversations={users}
           setChat={setChatId}
