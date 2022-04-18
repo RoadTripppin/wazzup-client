@@ -1,6 +1,6 @@
 import { CssBaseline, Drawer, Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getUserDetails } from "../../mocks/api/WazzupServerLib";
+import { getUsersDetails } from "../../api/WazzupServerLib";
 import ChatContainer from "../ChatBox/ChatContainer";
 import SideBar from "../SideBar/SideBar";
 import { useNavigate } from "react-router-dom";
@@ -17,12 +17,14 @@ const MainApp = () => {
 
   const getUsers = async () => {
     try {
-      const res = await getUserDetails(localStorage.getItem("email"));
+      const res = await getUsersDetails();
+
       const status = res.status;
       const ret_data = res.data;
+
       if (status == 200) {
-        setUsers(ret_data); //Need to confirm what is being returned by backend
-      } else {
+        setUsers(ret_data);
+      } else if (status != 400) {
         alert("Server Error!! Server may be down!");
       }
     } catch (e) {

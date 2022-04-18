@@ -28,14 +28,13 @@ async function fetchWithTimeout(resource, options = {}) {
 }
 
 // eslint-disable-next-line
-export async function getUsersDetails(userEmail) {
+export async function getUsersDetails() {
   const requestOptions = {
-    method: "POST",
+    method: "GET",
     headers: { "Content-Type": "application/json", Authorization: "Bearer " + localStorage.getItem("jwt_token") },
-    body: JSON.stringify({ email: userEmail }),
   };
-  const response = await fetchWithTimeout("http://10.20.63.4:8882/user/UsersDetails", requestOptions); //Change when backend code is ready
-  const data = await response.json();
+  const response = await fetchWithTimeout("http://10.20.63.4:8882/user/interacted", requestOptions); //Change when backend code is ready
+  const data = await response.json().rooms;
 
   return { data: data, status: response.status };
 }
