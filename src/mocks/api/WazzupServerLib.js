@@ -61,7 +61,7 @@ export function searchUser() {
     name: faker.name.firstName(),
     image_url: faker.image.avatar(),
   };
-  return user;
+  return { users: [user] };
 }
 
 export function initChat() {}
