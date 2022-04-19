@@ -63,5 +63,5 @@ export function searchUser() {
   };
   return { users: [user] };
 }
-
-export function initChat() {}
+// eslint-disable-next-line
+export async function initChatRoom(userId) {}

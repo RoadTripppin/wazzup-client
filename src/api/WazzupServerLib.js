@@ -100,3 +100,8 @@ export async function UpdateAPI(name, password, image) {
 
   return { data: data, status: response.status };
 }
+
+// eslint-disable-next-line
+export async function initChatRoom(userId) {
+  //Websocket API Yet to be implemented in server.
+}
