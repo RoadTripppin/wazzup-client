@@ -1,19 +1,46 @@
 "use strict";
+
+import _ from "lodash";
+import constants from "../util/Constants.js";
 /**
  * This file contains functions to make REST calls to wazzup-server.
  *
  */
 
 const url = "10.20.63.15";
+let ws;
 
-// eslint-disable-next-line
-function getChats(chatId, userId, offset, count) {
-  //API Yet to be implemented in server.
+function handleMessageReception(data) {
+  console.log(data);
 }
 
-// eslint-disable-next-line
-function sendMessage(args) {
-  //Websocket API Yet to be implemented in server.
+function handleRoomJoined(data) {
+  console.log("rj :" + data);
+}
+export function initWebSocket() {
+  ws = new WebSocket("ws://" + url + ":8882/ID?=" + localStorage.getItem("id"));
+  ws.onmessage = function (event) {
+    switch (event.data.actions) {
+      case constants.WebSocket.Actions.SEND_MESSAGE: {
+        handleMessageReception(event.data);
+        break;
+      }
+      case constants.WebSocket.Actions.ROOM_JOINED: {
+        handleRoomJoined(event.data);
+        break;
+      }
+      default: {
+        console.log("error: " + event);
+        break;
+      }
+    }
+  };
+}
+
+export function closeWebSocket() {
+  if (!_.isNull(ws)) {
+    ws.close();
+  }
 }
 
 async function fetchWithTimeout(resource, options = {}) {
@@ -27,6 +54,52 @@ async function fetchWithTimeout(resource, options = {}) {
   });
   clearTimeout(id);
   return response;
+}
+
+// eslint-disable-next-line
+export async function getChats(chatId) {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + localStorage.getItem("jwt_token") },
+    body: JSON.stringify({ roomid: chatId }),
+  };
+  const response = await fetchWithTimeout("http://" + url + ":8882/messages", requestOptions);
+  return response;
+}
+
+// eslint-disable-next-line
+export function sendMessage(message, chatRoomId, chatName) {
+  if (!_.isNull(ws)) {
+    let wsMessage = {
+      action: constants.WebSocket.Actions.SEND_MESSAGE,
+      message: message,
+      target: {
+        id: chatRoomId,
+        name: chatName,
+      },
+    };
+    ws.sendMessage(wsMessage);
+  }
+}
+
+export async function searchUser(userName) {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + localStorage.getItem("jwt_token") },
+    body: JSON.stringify({ querystring: userName }),
+  };
+  const response = await fetchWithTimeout("http://" + url + ":8882/users", requestOptions);
+  return response;
+}
+
+export async function initChatRoom(userId) {
+  if (!_.isNull(ws)) {
+    let wsMessage = {
+      action: constants.WebSocket.Actions.JOIN_PRIVATE_ROOM,
+      message: userId,
+    };
+    ws.sendMessage(wsMessage);
+  }
 }
 
 // eslint-disable-next-line
@@ -99,9 +172,4 @@ export async function UpdateAPI(name, password, image) {
   const data = await response.json();
 
   return { data: data, status: response.status };
-}
-
-// eslint-disable-next-line
-export async function initChatRoom(userId) {
-  //Websocket API Yet to be implemented in server.
 }

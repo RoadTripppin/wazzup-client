@@ -7,7 +7,7 @@ import * as _ from "lodash";
 const UserSearch = (props) => {
   const searchUser = async (v) => {
     setValue(v);
-    let response = api.searchUser(value);
+    let response = await api.searchUser(value);
     if (!_.isNull(props.users) && _.isArray(props.users) && _.size(response.users) == 1) {
       let user = response.users[0];
       await api.initChatRoom(user.id);

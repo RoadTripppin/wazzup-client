@@ -5,20 +5,28 @@ import _ from "lodash";
 
 class ChatContainer extends React.Component {
   state = { chat_id: "", user_id: "", messages: [], chat_name: "" };
-  loadData = (chatId, userId) => {
-    let chats = api.getChats(chatId, userId, 0, 25);
+  loadData = async (chatId, userId) => {
+    let chats = await api.getChats(chatId);
     this.setState({ user_id: userId, chat_id: chatId, messages: chats.messages, chat_name: chats.chat_name });
   };
 
   render = () => {
+    console.log(this.props);
+    if (this.props.chatId == null) {
+      return null;
+    }
+
     const convHeader = this.generateChatHeader();
     let messageList = this.generateMessageList();
     const messageInput = this.getMessageInputBox();
     const chatContainer = React.createElement(ck.ChatContainer, {}, [convHeader, messageList, messageInput]);
     return chatContainer;
   };
+
   componentDidMount() {
-    this.loadData("chat_id-xxx", "user_id-xxx");
+    let selfUserId = localStorage.getItem("id");
+    this.loadData(this.props.chatId, selfUserId);
+    api.initChatRoom(this.props.chatId);
   }
   generateMessageList = () => {
     const messages = [];
