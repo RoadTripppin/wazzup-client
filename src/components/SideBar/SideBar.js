@@ -20,11 +20,19 @@ const SideBar = (props) => {
       >
         <ConversationList>
           {props.conversations
-            ? props.conversations.map((c) => (
-                <Conversation key={c.id} name={c.name} onClick={() => setDetails(c.id, c.name, c.image_url)}>
-                  <Avatar src={c.image_url} />
-                </Conversation>
-              ))
+            ? props.conversations.map((c, i) => {
+                console.log("sidebar", c);
+                return (
+                  <Conversation
+                    key={c.id + i}
+                    name={c.name}
+                    onClick={() => setDetails(c.id, c.name, c.profilepic)}
+                    active={props.activeId === c.id}
+                  >
+                    <Avatar src={c.profilepic} />
+                  </Conversation>
+                );
+              })
             : null}
         </ConversationList>
       </Box>
