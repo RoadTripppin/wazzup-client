@@ -10,4 +10,9 @@
 
 
 ## Aditya :
-- [ ] Ask Aditya to Fill 
+- [x] Integrated REST API calls for getting all chats.
+- [x] Completed Integration of ChatContainer with Main App component.
+- [x] Refactored implementation of wazzup serer lib(server abraction for client).
+- [x] Integrated REST API calls for search user functionality.
+- [x] Created a Constants file to store config and constants to improve readibility. 
+- [x] Integrated WebSocket API calls to implement live chatting.
