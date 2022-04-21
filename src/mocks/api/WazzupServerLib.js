@@ -1,7 +1,7 @@
 "use strict";
 import faker from "@faker-js/faker";
 
-export function getChats(chatId, userId, offset, count) {
+export async function getChats(chatId, userId, offset, count) {
   let messages = [];
   const senderId = faker.datatype.uuid();
   for (let i = 0; i < count; i++) {
@@ -41,7 +41,7 @@ export function sendMessage() {
   //Websocket API Yet to be implemented in server.
 }
 
-export function getUsersDetails() {
+export async function getUsersDetails() {
   let users = [];
   for (let i = 0; i < 7; i++) {
     let user = {
@@ -55,14 +55,13 @@ export function getUsersDetails() {
   return users;
 }
 
-export function searchUser() {
+export async function searchUser() {
   let user = {
     id: faker.datatype.uuid(),
     name: faker.name.firstName(),
-    email: faker.internet,
     image_url: faker.image.avatar(),
   };
-  return user;
+  return { users: [user] };
 }
-
-export function initChat() {}
+// eslint-disable-next-line
+export async function initChatRoom(userId) {}

@@ -1,34 +1,48 @@
 import React from "react";
 import * as ck from "@chatscope/chat-ui-kit-react";
-import * as api from "../../mocks/api/WazzupServerLib.js";
+import * as api from "../../api/WazzupServerLib.js";
 import _ from "lodash";
 
 class ChatContainer extends React.Component {
-  state = { chat_id: "", user_id: "", messages: [], chat_name: "" };
-  loadData = (chatId, userId) => {
-    let chats = api.getChats(chatId, userId, 0, 25);
-    this.setState({ user_id: userId, chat_id: chatId, messages: chats.messages, chat_name: chats.chat_name });
+  loadData = async (chatId) => {
+    let chats = await api.getChats(chatId);
+    console.log(chats);
+    this.props.setMessages(chats);
   };
 
   render = () => {
+    console.log(this.props);
+    if (this.props.chatId == null) {
+      return null;
+    }
+    console.log(this.props);
     const convHeader = this.generateChatHeader();
     let messageList = this.generateMessageList();
     const messageInput = this.getMessageInputBox();
     const chatContainer = React.createElement(ck.ChatContainer, {}, [convHeader, messageList, messageInput]);
     return chatContainer;
   };
-  componentDidMount() {
-    this.loadData("chat_id-xxx", "user_id-xxx");
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.chatId !== this.props.chatId) {
+      this.loadData(this.props.chatId);
+    }
   }
+
+  componentDidMount() {
+    api.initChatRoom(this.props.chatId);
+  }
+
   generateMessageList = () => {
+    let selfUserId = localStorage.getItem("id");
     const messages = [];
-    let currDate = new Date(_.get(this.state, "messages.0.timestamp"));
+    let currDate = new Date(_.get(this.props, "messages.0.timestamp"));
     const firstSeparator = React.createElement(ck.MessageSeparator, {
       key: "separator1",
       content: currDate.toDateString(),
     });
     messages.push(firstSeparator);
-    _.forEach(_.get(this.state, "messages"), (messageInfo) => {
+    _.forEach(_.get(this.props, "messages"), (messageInfo) => {
       const messageDate = new Date(_.get(messageInfo, "timestamp"));
       if (messageDate.toDateString() != currDate.toDateString()) {
         const separator = React.createElement(ck.MessageSeparator, {
@@ -44,21 +58,21 @@ class ChatContainer extends React.Component {
           message: _.get(messageInfo, "text"),
           sender: _.get(messageInfo, "sender_id"),
           sentTime: messageDate.toTimeString(),
-          direction: _.get(this.state, "user_id") === _.get(messageInfo, "sender_id") ? "outgoing" : "incoming",
+          direction: selfUserId === _.get(messageInfo, "sender_id") ? "outgoing" : "incoming",
         },
       });
       messages.push(messageElement);
     });
 
-    return React.createElement(ck.MessageList, { key: _.get(this.state, "chat_id") + "message-list" }, messages);
+    return React.createElement(ck.MessageList, { key: _.get(this.props, "chatId") + "message-list" }, messages);
   };
 
   generateChatHeader() {
-    return React.createElement(ck.ConversationHeader, { key: _.get(this.state, "chat_id") }, [
+    return React.createElement(ck.ConversationHeader, { key: _.get(this.props, "chatId") }, [
       React.createElement(ck.ConversationHeader.Back, { key: "back" }),
       React.createElement(ck.ConversationHeader.Content, {
-        key: _.get(this.state, "chat_id") + "_HeaderContent",
-        userName: _.get(this.state, "chat_name"),
+        key: _.get(this.props, "chatId") + "_HeaderContent",
+        userName: _.get(this.props, "currentName"),
         info: "",
       }),
     ]);
@@ -66,15 +80,14 @@ class ChatContainer extends React.Component {
 
   getMessageInputBox() {
     return React.createElement(ck.MessageInput, {
-      key: `${_.get(this.state, "user_id")}_${_.get(this.state, "chat_id")}_MessageInput`,
-      placeholder: "",
+      key: `notMe_${_.get(this.props, "chatId")}_MessageInput`,
+      placeholder: "Type message ... ",
       onSend: (msg) => {
-        let newMessageList = _.get(this.state, "messages", []);
-        let messageData = { sender_id: _.get(this.state, "user_id"), text: msg, timestamp: Date.now() };
-        newMessageList.push(messageData);
-        this.setState({ messages: newMessageList });
+        let selfUserId = localStorage.getItem("id");
+        let messageData = { sender_id: selfUserId, text: msg, timestamp: Date.now() };
+        this.props.setMessages([...this.props.messages, messageData]);
         console.log(`sending message: ${msg}`);
-        api.sendMessage();
+        api.sendMessage(this.props.ws, msg, _.get(this.props, "chatId"), this.props.currentName);
       },
     });
   }
