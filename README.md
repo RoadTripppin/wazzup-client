@@ -35,6 +35,9 @@ https://user-images.githubusercontent.com/31245878/164357232-99f318ac-65d7-4e1f-
 
 https://user-images.githubusercontent.com/31245878/164343125-1626b5e8-84c7-4e7c-b58a-c11b74311bed.mov
 
+## Backend Test Video
+
+https://user-images.githubusercontent.com/78217991/164365257-c4b5c2f4-ff0b-4723-be93-203be1fc2433.mov
 
 ## Link to API documentation
 https://github.com/RoadTripppin/wazzup/tree/main/backend_API_spec 
