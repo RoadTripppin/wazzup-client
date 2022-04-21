@@ -1,10 +1,10 @@
 import { Alert, Avatar, Box, Button, Container, CssBaseline, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
-import { LoginAPI } from "../../api/WazzupServerLib";
+import { LoginAPI, initWebSocket } from "../../api/WazzupServerLib";
 import logo from "../../assets/logo.jpg";
 
-const Login = () => {
+const Login = (props) => {
   const [searchParams] = useSearchParams();
   const [email, setEmail] = useState(searchParams.get("email") ?? "");
   const [alertStatus, setAlertStatus] = useState("");
@@ -33,6 +33,8 @@ const Login = () => {
             localStorage.setItem("profilepic", ret_data.user.profilepic);
             localStorage.setItem("email", ret_data.user.email);
             localStorage.setItem("id", ret_data.user.id);
+            let ws = initWebSocket();
+            props.setWs(ws);
             //Successful Login
             console.log("Success!");
             navigate("/chat");

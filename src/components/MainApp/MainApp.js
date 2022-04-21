@@ -8,11 +8,12 @@ import UserSearch from "../UserSearch/UserSearch";
 
 const drawerWidth = 240;
 
-const MainApp = () => {
+const MainApp = (props) => {
   const [users, setUsers] = useState([]);
   const [chatId, setChatId] = useState(null);
   const [currentName, setCurrentName] = useState("");
   const [currentPhoto, setCurrentPhoto] = useState("");
+  const [messages, setMessages] = useState([]);
   let navigate = useNavigate();
 
   const getUsers = async () => {
@@ -35,7 +36,6 @@ const MainApp = () => {
 
   useEffect(() => {
     getUsers();
-
     /* [] => when to re-run*/
   }, []);
 
@@ -72,7 +72,15 @@ const MainApp = () => {
         />
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1 }}>
-        <ChatContainer chatId={chatId} currentName={currentName} currentPhoto={currentPhoto} />
+        <ChatContainer
+          messages={messages}
+          setMessages={setMessages}
+          chatId={chatId}
+          currentName={currentName}
+          currentPhoto={currentPhoto}
+          ws={props.ws}
+          setWs={props.setWs}
+        />
       </Box>
     </Box>
   );

@@ -2,13 +2,13 @@
 
 import _ from "lodash";
 import constants from "../util/Constants.js";
+
 /**
  * This file contains functions to make REST calls to wazzup-server.
  *
  */
 
 const url = "10.20.63.15";
-let ws;
 
 function handleMessageReception(data) {
   console.log(data);
@@ -18,7 +18,7 @@ function handleRoomJoined(data) {
   console.log("rj :" + data);
 }
 export function initWebSocket() {
-  ws = new WebSocket("ws://" + url + ":8882/ID?=" + localStorage.getItem("id"));
+  let ws = new WebSocket("ws://" + url + ":8882/ws?ID=" + localStorage.getItem("id"));
   ws.onmessage = function (event) {
     switch (event.data.actions) {
       case constants.WebSocket.Actions.SEND_MESSAGE: {
@@ -35,10 +35,11 @@ export function initWebSocket() {
       }
     }
   };
+  return ws;
 }
 
-export function closeWebSocket() {
-  if (!_.isNull(ws)) {
+export function closeWebSocket(ws) {
+  if (!ws) {
     ws.close();
   }
 }
@@ -58,18 +59,26 @@ async function fetchWithTimeout(resource, options = {}) {
 
 // eslint-disable-next-line
 export async function getChats(chatId) {
-  const requestOptions = {
-    method: "GET",
-    headers: { "Content-Type": "application/json", Authorization: "Bearer " + localStorage.getItem("jwt_token") },
-    body: JSON.stringify({ roomid: chatId }),
-  };
-  const response = await fetchWithTimeout("http://" + url + ":8882/messages", requestOptions);
-  return response;
+  if (!_.isNull(chatId)) {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + localStorage.getItem("jwt_token") },
+      body: JSON.stringify({ roomid: chatId }),
+    };
+    const response = await fetchWithTimeout("http://" + url + ":8882/messages", requestOptions);
+    const data = await response.json();
+    return data.chats;
+  }
+  return [];
 }
 
 // eslint-disable-next-line
-export function sendMessage(message, chatRoomId, chatName) {
-  if (!_.isNull(ws)) {
+export function sendMessage(ws, message, chatRoomId, chatName) {
+  console.log("aha");
+  console.log(ws);
+
+  if (ws) {
+    console.log("kaboom");
     let wsMessage = {
       action: constants.WebSocket.Actions.SEND_MESSAGE,
       message: message,
@@ -78,7 +87,9 @@ export function sendMessage(message, chatRoomId, chatName) {
         name: chatName,
       },
     };
-    ws.sendMessage(wsMessage);
+    console.log(wsMessage);
+    console.log(ws);
+    ws.send(wsMessage);
   }
 }
 
@@ -92,8 +103,8 @@ export async function searchUser(userName) {
   return response;
 }
 
-export async function initChatRoom(userId) {
-  if (!_.isNull(ws)) {
+export async function initChatRoom(ws, userId) {
+  if (!ws) {
     let wsMessage = {
       action: constants.WebSocket.Actions.JOIN_PRIVATE_ROOM,
       message: userId,
